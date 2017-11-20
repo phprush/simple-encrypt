@@ -1,5 +1,16 @@
 # simple-encrypt
 
+###示例代码
+```
+<?php
+try {
+    $sign = SimplaeEncrypt::createSign();
+    dump($sign);
+} catch ( Exception $e) {
+    dump($e);
+}
+```
+
 ### 使用方式
 ```
 /**
