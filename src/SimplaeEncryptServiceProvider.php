@@ -1,50 +1,54 @@
 <?php
 namespace PhpRush\SimplaeEncrypt;
-
-use Exception;
-use PhpRush\SimplaeEncrypt\Sign\Manage;
-
-class SimplaeEncrypt
+use Illuminate\Support\ServiceProvider;
+class SimplaeEncryptServiceProvider extends ServiceProvider
 {
-
-    private $appKey;
-
-    private $appSecret;
-
-    private $encryptType = null;
-
-    protected $params = null;
-
-    protected $post = null;
-
-    public function __construct($config, $params = null, $post = null)
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = true;
+    /**
+     * Bootstrap the application events.
+     *
+     * @return void
+     */
+    public function boot()
     {
-        $this->appKey = array_get($config, 'app_key', '');
-        $this->appSecret = array_get($config, 'app_secret', '');
-        $this->encryptType = strtoupper(array_get($config, 'encrypt_type', 'md5'));
-        
-        $this->params = $params;
-        $this->post = $post;
+        $config_file = dirname(__DIR__) . '/config/config.php';
+        $this->mergeConfigFrom($config_file, 'simple_encrypt');
+        $this->publishes([
+            $config_file => config_path('simple_encrypt.php')
+        ], 'config');
     }
-    
-    
-
-    public function verifySign()
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
     {
-        return Manage::Verify($this->params, $this->post, $this->getKeyInfo());
+        $this->app->bind('SimplaeEncrypt', function () {
+            $config = config('simple_encrypt');
+            
+            $request = \app()->request;
+            $params = $request->query();
+            $post = $request->method() == 'POST' ? $request->post() : null;
+            
+            return new SimplaeEncrypt($config, $params, $post);
+        });
     }
-    
-    public function createSign()
-    {
-        return Manage::createSign($this->params, $this->post, $this->getKeyInfo());
-    }
-
-    private function getKeyInfo()
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
     {
         return [
-            'sign_method' => $this->encryptType,
-            'api_key' => $this->appKey,
-            'api_secret' => $this->appSecret
+            'SimplaeEncrypt',
+            SimplaeEncrypt::class
         ];
     }
 }
