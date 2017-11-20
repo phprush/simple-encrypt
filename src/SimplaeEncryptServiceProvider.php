@@ -21,9 +21,9 @@ class SimplaeEncryptServiceProvider extends ServiceProvider
     public function boot()
     {
         $config_file = dirname(__DIR__) . '/config/config.php';
-        $this->mergeConfigFrom($config_file, 'kuaizhunbao');
+        $this->mergeConfigFrom($config_file, 'simple_encrypt');
         $this->publishes([
-            $config_file => config_path('kuaizhunbao.php')
+            $config_file => config_path('simple_encrypt.php')
         ], 'config');
     }
 
@@ -35,7 +35,7 @@ class SimplaeEncryptServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('SimplaeEncrypt', function () {
-            $config = config('kuaizhunbao');
+            $config = config('simple_encrypt');
             return new SimplaeEncrypt($config);
         });
     }
