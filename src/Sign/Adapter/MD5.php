@@ -49,9 +49,12 @@ class MD5 implements Inter
     public function createSign()
     {
         $vars = [];
-        foreach ($this->formdata as $key => $value) {
-            array_push($vars, $key ?  : '');
-            array_push($vars, $value ?  : '');
+        
+        if (! empty($this->formdata)) {
+            foreach ($this->formdata as $key => $value) {
+                array_push($vars, $key ?  : '');
+                array_push($vars, $value ?  : '');
+            }
         }
         
         $dataString = join('-', $vars);
