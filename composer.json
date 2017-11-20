@@ -1,0 +1,21 @@
+{
+  "name": "phprush/simple-encrypt",
+  "description": "simple encrypt lib",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "JianYong",
+      "email": "jianyong.me@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "PhpRush\\SimplaeEncrypt\\": ["src/"]
+    }
+  },
+  "minimum-stability": "stable",
+  "require": {
+        "php": ">=5.3.3"
+  }
+}
